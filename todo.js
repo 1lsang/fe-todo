@@ -77,6 +77,9 @@ const showTodo = (status) => {
   );
 };
 
+/**
+ * 태그별 todo의 개수를 출력합니다.
+ */
 const showTags = () => {
   const countStatus = {};
   todos.forEach((todo) =>
