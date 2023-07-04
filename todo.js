@@ -99,11 +99,26 @@ const showTags = () => {
 };
 
 /**
+ * 해당하는 tag를 가지고 있는 todo를 모두 출력합니다.
+ * @param {string} tag
+ */
+const showTag = (tag) => {
+  const filteredTodos = todos.filter((todo) => todo.tags.includes(tag));
+  console.log(
+    `${tag}(${filteredTodos.length}) : ${filteredTodos
+      .reduce((accumulator, todo) => {
+        return accumulator + `'${todo.name}, ${todo.id}번' ,`;
+      }, "")
+      .slice(0, -1)}`
+  );
+};
+
+/**
  * todo를 조회합니다.
  * @param {string} status
  */
 
-const show = (status) => {
+const show = (status, tag) => {
   switch (status) {
     case "all":
       showAll();
@@ -112,6 +127,7 @@ const show = (status) => {
       showTags();
       break;
     case "tag":
+      showTag(tag);
       break;
     default:
       showTodo(status);
@@ -162,7 +178,7 @@ rl.on("line", (line) => {
 
   switch (inputCommands[0]) {
     case "show":
-      show(inputCommands[1]);
+      show(inputCommands[1], inputCommands[2]);
       break;
 
     case "add":
