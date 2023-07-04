@@ -77,6 +77,24 @@ const showTodo = (status) => {
   );
 };
 
+const showTags = () => {
+  const countStatus = {};
+  todos.forEach((todo) =>
+    todo.tags.forEach((tag) =>
+      Object.keys(countStatus).includes(tag)
+        ? countStatus[tag]++
+        : (countStatus[tag] = 1)
+    )
+  );
+  console.log(
+    `총 태그수: ${Object.keys(countStatus).length}개: ${Object.keys(countStatus)
+      .reduce((accumulator, tag) => {
+        return accumulator + `'${tag}': ${countStatus[tag]}개 ,`;
+      }, "")
+      .slice(0, -1)}`
+  );
+};
+
 /**
  * todo를 조회합니다.
  * @param {string} status
@@ -88,6 +106,7 @@ const show = (status) => {
       showAll();
       break;
     case "tags":
+      showTags();
       break;
     case "tag":
       break;
@@ -111,6 +130,13 @@ const deleteTodo = (id) => {
   console.log(`${todos[deleteIndex].name} todo가 목록에서 삭제되었습니다.`);
   todos.splice(deleteIndex, 1);
 };
+
+/**
+ * todo의 상태를 변경합니다.
+ * @param {number} id
+ * @param {string} status
+ * @returns
+ */
 
 const updateTodo = (id, status) => {
   const updateIndex = todos.findIndex((todo) => todo.id === id);
