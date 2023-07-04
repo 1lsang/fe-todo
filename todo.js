@@ -192,12 +192,20 @@ rl.on("line", (line) => {
 
   switch (inputCommands[0]) {
     case "show":
-      show(inputCommands[1], inputCommands[2]);
+      inputCommands.length > 2
+        ? show(inputCommands[1], inputCommands[2])
+        : show(inputCommands[1]);
       break;
 
     case "add":
-      addTodo(inputCommands[1], JSON.parse(inputCommands[2]));
-      showAll();
+      // 태그 유효성 검사
+      try {
+        addTodo(inputCommands[1], JSON.parse(inputCommands[2]));
+        showAll();
+      } catch (error) {
+        console.error("태그 규칙에 맞게 입력해주세요.");
+      }
+
       // add$study$["1","2"]
       break;
 
