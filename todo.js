@@ -15,6 +15,8 @@ const todos = [
 
 let inputCommands = [];
 
+const statusList = ["todo", "doing", "done"];
+
 const readline = require("readline");
 
 const rl = readline.createInterface({
@@ -117,6 +119,10 @@ const updateTodo = (id, status) => {
     return 0;
   }
   //   status 체크
+  if (statusList.includes(status) === false) {
+    console.log("존재하지 않는 상태입니다. 다시 입력해주세요.");
+    return;
+  }
   todos[updateIndex].status = status;
   console.log(`${todos[updateIndex].name} ${status}으로 변경되었습니다.`);
 };
@@ -133,7 +139,7 @@ rl.on("line", (line) => {
     case "add":
       addTodo(inputCommands[1], JSON.parse(inputCommands[2]));
       showAll();
-      //   add$study$["1","2"]
+      // add$study$["1","2"]
       break;
 
     case "delete":
