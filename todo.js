@@ -27,7 +27,24 @@ const rl = readline.createInterface({
 // ID 생성
 let globalId = 0;
 
+/**
+ * ID를 생성하는 함수입니다.
+ * @returns number
+ */
 const generateId = () => globalId++;
+
+/**
+ * Todo의 status를 확인하는 함수입니다.
+ * @param {string} status
+ * @returns boolean
+ */
+const checkStatus = (status) => {
+  if (statusList.includes(status) === false) {
+    console.log("존재하지 않는 상태입니다. 다시 입력해주세요.");
+    return false;
+  }
+  return true;
+};
 
 /**
  * todo를 추가하는 함수입니다.
@@ -66,6 +83,7 @@ const showAll = () => {
  */
 
 const showTodo = (status) => {
+  if (checkStatus(status) === false) return;
   const filteredTodos = todos.filter((todo) => todo.status === status);
 
   console.log(
@@ -163,11 +181,7 @@ const updateTodo = (id, status) => {
     console.log("존재하지 않는 id입니다. 다시 입력해주세요.");
     return 0;
   }
-  //   status 체크
-  if (statusList.includes(status) === false) {
-    console.log("존재하지 않는 상태입니다. 다시 입력해주세요.");
-    return;
-  }
+  if (checkStatus(status) === false) return;
   todos[updateIndex].status = status;
   console.log(`${todos[updateIndex].name} ${status}으로 변경되었습니다.`);
 };
