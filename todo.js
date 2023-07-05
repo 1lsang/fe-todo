@@ -121,7 +121,13 @@ const showTags = () => {
  * @param {string} tag
  */
 const showTag = (tag) => {
+  // 없는 태그일때!
+
   const filteredTodos = todos.filter((todo) => todo.tags.includes(tag));
+  if (filteredTodos.length === 0) {
+    console.log("없는 태그입니다. 다시 입력해주세요.");
+    return;
+  }
   console.log(
     `${tag}(${filteredTodos.length}) : ${filteredTodos
       .reduce((accumulator, todo) => {
@@ -136,19 +142,23 @@ const showTag = (tag) => {
  * @param {string} status
  */
 
-const show = (status, tag) => {
-  switch (status) {
+const show = (inputCommands) => {
+  switch (inputCommands[1]) {
     case "all":
+      checkCommandLength(inputCommands, 2);
       showAll();
       break;
     case "tags":
+      checkCommandLength(inputCommands, 2);
       showTags();
       break;
     case "tag":
-      showTag(tag);
+      checkCommandLength(inputCommands, 3);
+      showTag(inputCommands[2]);
       break;
     default:
-      showTodo(status);
+      checkCommandLength(inputCommands, 2);
+      showTodo(inputCommands[1]);
       break;
   }
 };
@@ -186,48 +196,53 @@ const updateTodo = (id, status) => {
   console.log(`${todos[updateIndex].name} ${status}으로 변경되었습니다.`);
 };
 
+const checkCommandLength = (inputCommands, length) => {
+  if (inputCommands.length !== length) throw Error;
+};
+
+rl.setPrompt("명령하세요 : ");
+rl.prompt();
 rl.on("line", (line) => {
-  inputCommands = line.split("$");
-  console.log("input: ", inputCommands[0]);
+  try {
+    inputCommands = line.split("$");
+    switch (inputCommands[0]) {
+      case "show":
+        show(inputCommands);
+        break;
 
-  switch (inputCommands[0]) {
-    case "show":
-      inputCommands.length > 2
-        ? show(inputCommands[1], inputCommands[2])
-        : show(inputCommands[1]);
-      break;
-
-    case "add":
-      // 태그 유효성 검사
-      try {
+      case "add":
+        // 태그 유효성 검사
+        checkCommandLength(inputCommands, 3);
         addTodo(inputCommands[1], JSON.parse(inputCommands[2]));
         showAll();
-      } catch (error) {
-        console.error("태그 규칙에 맞게 입력해주세요.");
-      }
 
-      // add$study$["1","2"]
-      break;
+        // add$study$["1","2"]
+        break;
+      case "delete":
+        checkCommandLength(inputCommands, 2);
+        if (deleteTodo(Number(inputCommands[1])) !== 0) {
+          showAll();
+        }
+        break;
 
-    case "delete":
-      if (deleteTodo(Number(inputCommands[1])) !== 0) {
-        showAll();
-      }
-      break;
+      case "update":
+        checkCommandLength(inputCommands, 3);
+        if (updateTodo(Number(inputCommands[1]), inputCommands[2]) !== 0) {
+          showAll();
+        }
 
-    case "update":
-      if (updateTodo(Number(inputCommands[1]), inputCommands[2]) !== 0) {
-        showAll();
-      }
+        break;
 
-      break;
+      case "exit":
+        rl.close();
+        return;
 
-    case "exit":
-      rl.close();
-      break;
-
-    default:
-      console.log("fault");
-      return;
+      default:
+        console.log("잘못된 입력입니다. 다시 입력해주세요.");
+        return;
+    }
+    rl.prompt();
+  } catch (error) {
+    console.error("잘못된 입력입니다. 다시 입력해주세요.");
   }
 });
