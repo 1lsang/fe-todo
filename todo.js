@@ -17,7 +17,7 @@ const showAll = require("./lib/show").showAll;
 
 const checkCommandLength = require("./lib/utils").checkCommandLength;
 
-rl.setPrompt("명령하세요 : ");
+rl.setPrompt("\x1b[33m명령하세요 : \x1b[0m");
 rl.prompt();
 rl.on("line", (line) => {
   try {
@@ -55,11 +55,14 @@ rl.on("line", (line) => {
         return;
 
       default:
-        console.log("잘못된 입력입니다. 다시 입력해주세요.");
+        console.error(
+          "\x1b[31m%s\x1b[0m",
+          "잘못된 입력입니다. 다시 입력해주세요."
+        );
         return;
     }
   } catch (error) {
-    console.error("잘못된 입력입니다. 다시 입력해주세요.");
+    console.error("\x1b[31m%s\x1b[0m", "잘못된 입력입니다. 다시 입력해주세요.");
   }
   rl.prompt();
 });
